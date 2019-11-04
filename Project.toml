@@ -1,0 +1,13 @@
+name = "OPFSampler"
+uuid = "ce3535a8-59a6-4c0a-83ac-3858a19dc5ad"
+authors = ["Invenia Technical Computing Corporation"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
