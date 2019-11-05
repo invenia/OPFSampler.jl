@@ -1,4 +1,4 @@
-# OPFSampler
+# OPFSampler 
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://invenia.github.io/OPFSampler.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://invenia.github.io/OPFSampler.jl/dev)
@@ -13,7 +13,7 @@ The goal of this package is to provide functions that take a power grid as input
 `RunDCSampler()` and `RunACSampler()` are the two main functions in this section that trigger the sampler to generate DC and AC-OPF samples, respectively.
 
 ## DC Sampler
-The DC sampler gives you the functionality to vary the grid parameters by rescaling them using factors drawn from uniform distribution of the form $\mathcal{U}(1-\delta, 1+\delta)$. The user is able to re-scale the following parameters:
+The DC sampler gives you the functionality to vary the grid parameters by rescaling them using factors drawn from uniform distribution of the form <img src="https://render.githubusercontent.com/render/math?math=\mathcal{U}(1-\delta, 1%2B\delta)">. The user is able to re-scale the following parameters:
 
 * nodal load active power,
 * maximum active power output of generators,
@@ -38,7 +38,7 @@ base_model = PowerModels.parse_file("path to PowerModel case data.");
 ```
 
 setting a dictionary of parameters that include the case name,
-for which the samples are to be generated along with the selected $0 \leq \delta \leq 1$ for each parameter that is varied. Here we have chosen $10\%$ deviation for all the parameters as an example.
+for which the samples are to be generated along with the selected <img src="https://render.githubusercontent.com/render/math?math=0 \leq \delta \leq 1"> for each parameter that is varied. Here we have chosen 10\% deviation for all the parameters as an example.
 
 ```
 params = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
@@ -54,7 +54,7 @@ The sampling function starts by generating the number of required samples and th
 #### Output Structure
 The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution. For each input parameter type (e.g., "price_insensitive_load"), the order of array of data is based on the sorted keys of the original data in the `base_model` for the "price_insensitive_load".  
 ## AC Sampler
-The AC sampler gives you the functionality to vary the grid parameters by rescaling them using factors drawn from uniform distribution of the form $\mathcal{U}(1-\delta, 1+\delta)$. The user is able to re-scale the following parameters:
+The AC sampler gives you the functionality to vary the grid parameters by rescaling them using factors drawn from uniform distribution of the form <img src="https://render.githubusercontent.com/render/math?math=\mathcal{U}(1-\delta, 1%2B\delta)">. The user is able to re-scale the following parameters:
 
 * nodal load active power,
 * nodal load reactive power,
@@ -82,7 +82,7 @@ base_model = PowerModels.parse_file("path to PowerModel case data.");
 ```
 
 setting a dictionary of parameters that include the case name,
-for which the samples are to be generated along with the selected $0 \leq \delta \leq 1$ for each parameter that is varied. Here we have chosen $10\%$ deviation for all the parameters as an example.
+for which the samples are to be generated along with the selected <img src="https://render.githubusercontent.com/render/math?math=0 \leq \delta \leq 1"> for each parameter that is varied. Here we have chosen 10\% deviation for all the parameters as an example.
 
 ```
 params = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
@@ -101,7 +101,7 @@ The output data `samples` is an array of dictionaries where each element of arra
 
 ## Grid Clean-Up Functions
 In order to avoid creating samples for elements of the grid that are either disabled or not relevant, there are two functions `grid_dcopf_cleanup!()`  and `grid_acopf_cleanup!()` that take the PowerModel parsed grid as input and clean up the irrelevant elements.
-For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have $p_{min}=p_{max}=0$. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have $p_{min}=p_{max}=q_{min}=q_{max}=0$.
+For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=0">. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=q_{min}=q_{max}=0">.
 
 These function can be called before running the sampler.
 ```
@@ -113,7 +113,7 @@ grid_acopf_cleanup!(base_model) # for AC-OPF
 ## How to Use Generated Samples?
 There are functions provided in the package to vary the parameters of the original grid by the values generated in the `samples`, and run OPF or do other analysis.
 
-Let's assume that the vector of `samples` are created and we want to change the grid parameters to those in the $i-th$ sample:
+Let's assume that the vector of `samples` are created and we want to change the grid parameters to those in the i-th sample:
 
 #### DC-OPF Example:
 ```
