@@ -81,6 +81,7 @@ grid_acopf_cleanup!(base_model) # for AC-OPF
 
 ## Generated Data Samples
 Using the sampler code above, we have generated input samples for different grid cases in the pglib-opf library. All the input samples have been tested to make sure they have feasible OPF solution. Table below shows the list of grids and available input sample size for each grid:
+
 | Grid         | DC Sample Size | AC Sample Size |
 |--------------|----------------|----------------|
 | 24-ieee-rts  |       10k      |       1k       |
