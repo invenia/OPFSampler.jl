@@ -63,7 +63,7 @@ samples = RunDCSampler(num_of_samples, params_DC);
 # AC-OPF
 samples = RunACSampler(num_of_samples, params_AC);
 ```
-The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
+The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
 
 #### Output Structure
 The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution. For each input parameter type, the order of array of data is based on the sorted dictionary of the original data in the `base_model`. For examples, `samples[i]["rate_a"]` is a vector containing the thermal rating branch values in sample i and the order is the same order of the keys in `sort(base_model["branch"])`. Or `samples[i]["qd"]` is a vector containing the load reactive power values in sample i and the order is the same order of the keys in `sort(base_model["load"])`.   
@@ -80,7 +80,7 @@ grid_acopf_cleanup!(base_model) # for AC-OPF
 ```
 
 ## Generated Data Samples
-Using the sampler code above, we have generated input samples for different grid cases in the pglib-opf library. All the input samples have been tested to make sure they have feasible OPF solution. Table below shows the list of grids and available input sample size for each grid:
+Using the sampler code above, we have generated input samples for different grid cases in the [pglib-opf library](https://github.com/power-grid-lib/pglib-opf). All the input samples have been tested to make sure they have feasible OPF solution. Table below shows the list of grids and available input sample size for each grid:
 | Grid         | DC Sample Size | AC Sample Size |
 |--------------|----------------|----------------|
 | 24-ieee-rts  |       10k      |       1k       |
