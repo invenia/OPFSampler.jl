@@ -66,20 +66,27 @@ samples = RunACSampler(num_of_samples, params_AC);
 The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
 
 #### Output Structure
-The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution. For each input parameter type, the order of array of data is based on the sorted dictionary of the original data in the `base_model`. For examples, `samples[i]["rate_a"]` is a vector containing the thermal rating branch values in sample i and the order is the same order of the keys in `sort(base_model["branch"])`. Or `samples[i]["qd"]` is a vector containing the load reactive power values in sample i and the order is the same order of the keys in `sort(base_model["load"])`.
+The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution.
+
+Each input parameter in the `samples[i]` is a vector of data containing the values of that parameter. The original grid data in PowerModels format that we have parsed and from which the `samples` are generated is stored in `base_model` that is a dictionary, whose keys correspond to different elements of the grid. The relevant elements that are modified through OPFSampler are:
+* "load" : loads
+* "gen" : generators
+* "branch" : power grid lines.
+
+Each grid element has a set of keys corresponding to parts of the grid of the same type. For example, `base_model["branch"]["4"]` has the information of branch identified with "4" as its identifier.
 
 For sample i in the dictionary, depending on the type of sampler (AC/DC), all or a subset of the following keys can be found:
 
-* "pd" : nodal load active power
-* "qd" : nodal load reactive power
-* "pmax" : maximum active power output of generators
-* "qmax" : maximum reactive power output of generators
-* "rate_a" : line thermal ratings
-* "br_x" : line reactance values
-* "br_r" : line resistance values.
+* "pd" : nodal load active power corresponding to `base_model["load"][load key]["pd"]`
+* "qd" : nodal load reactive power corresponding to `base_model["load"][load key]["qd"]`
+* "pmax" : maximum active power output of generators corresponding to `base_model["gen"][gen key]["pmax"]`
+* "qmax" : maximum reactive power output of generators corresponding to `base_model["gen"][gen key]["qmax"]`
+* "rate_a" : line thermal ratings corresponding to `base_model["branch"][branch key]["rate_a"]`
+* "br_x" : line reactance values corresponding to `base_model["branch"][branch key]["br_x"]`
+* "br_r" : line resistance values corresponding to `base_model["branch"][branch key]["br_r"]`.
 * "OPF_output" : OPF solution for the corresponding sample in PowerModels format.
 
-The key names are compatible with the keys of corresponding data in [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl).
+For each input parameter type, the order of data array is based on the sorted dictionary of the original PowerModels data in the `base_model`. For example, the k-th element of the vector `samples[i]["rate_a"][k]` corresponds to the "rate_a" data of the branch identified by the k-th key in the sorted branch dictionary `sort(base_model["branch"])` or the k-th element of the vector `samples[i]["qmax"][k]` corresponds to the "qmax" data of the generator identified by the k-th key in the sorted generator dictionary `sort(base_model["gen"])`. 
 ## Grid Clean-Up Functions
 In order to avoid creating samples for elements of the grid that are either disabled or not relevant, there are two functions `grid_dcopf_cleanup!()`  and `grid_acopf_cleanup!()` that take the PowerModel parsed grid as input and clean up these irrelevant elements.
 For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=0">. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=q_{min}=q_{max}=0">.
@@ -113,7 +120,7 @@ Using the sampler code above, we have generated input samples for different grid
 
 You can access the samples in the following [link]().
 
-In the generated samples above, the OPF solution that is generated under "OPF_output" has been removed to keep the size of the data small. 
+In the generated samples above, the OPF solution that is generated under "OPF_output" has been removed to keep the size of the data small.
 ## How to Use Generated Samples?
 There are functions provided in the package to vary the parameters of the original grid by the values generated in the `samples`, and run OPF or perform other analysis.
 
