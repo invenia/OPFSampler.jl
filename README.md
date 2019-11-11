@@ -7,7 +7,9 @@
 [![Codecov](https://codecov.io/gh/invenia/OPFSampler.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/invenia/OPFSampler.jl)
 
 # Goal
-The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behavior of the OPF input parameters.
+The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behaviour of the OPF input parameters.
+
+We have made a publicly-available database of input samples for different grids for both DC and AC-OPF that have feasible OPF solution, which can be found in [here](). Further information about the samples and the related function can be found in the rest of this document.  
 
 ## Sampler
 `RunDCSampler()` and `RunACSampler()` are the two main functions that generate DC- and AC-OPF samples, respectively.
@@ -34,6 +36,7 @@ Pkg.activate("./")
 
 using OPFSampler
 using PowerModels
+using Random
 ```
 Parsing the power grid:
 ```
@@ -52,16 +55,19 @@ params_DC = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
 params_AC = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
                "dev_load_qd" => 0.1, "dev_pgen_max" => 0.1, "dev_qgen_max" => 0.1,
                "dev_rate_a" => 0.1, "dev_br_x" => 0.1, "dev_br_r" => 0.1);
+range = MersenneTwister(12345);
 ```
-Finally running the sampler and getting the feasible OPF samples:
+Since, sample generation code uses random numbers, the range that initilizes the random number generator can be passed as a keyword.
+
+Finally, to run the Sampler:
 ```
 num_of_samples = 5; # number of required OPF samples.
 
 # DC-OPF
-samples = RunDCSampler(num_of_samples, params_DC);
+samples = RunDCSampler(num_of_samples, params_DC; rng = range);
 
 # AC-OPF
-samples = RunACSampler(num_of_samples, params_AC);
+samples = RunACSampler(num_of_samples, params_AC; rng = range);
 ```
 The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
 
@@ -86,8 +92,8 @@ For sample i in the dictionary, depending on the type of sampler (AC/DC), all or
 * "br_r" : line resistance values corresponding to `base_model["branch"][branch key]["br_r"]`.
 * "OPF_output" : OPF solution for the corresponding sample in PowerModels format.
 
-We do not keep keys in the output, but make the assumption that the Array order is the same as the lexicographical ordering in PowerModels, i.e. `sort(power_model["load"]))` for load. 
-For example, the k-th element of the vector `samples[i]["rate_a"][k]` corresponds to the "rate_a" data of the branch identified by the k-th key in the sorted branch dictionary `sort(base_model["branch"])` or the k-th element of the vector `samples[i]["qmax"][k]`
+We do not keep keys in the output, but make the assumption that the Array order is the same as the lexicographical ordering in PowerModels, i.e. `sort(power_model["load"]))` for load.
+For example, the k-th element of the vector `samples[i]["rate_a"][k]` corresponds to the "rate_a" data of the branch identified by the k-th key in the sorted branch dictionary `sort(base_model["branch"])` or the k-th element of the vector `samples[i]["qmax"][k]` corresponds to the "qmax" data of the generator identified by the k-th key in the sorted generator dictionary `sort(base_model["gen"])`.
 ## Grid Clean-Up Functions
 In order to avoid creating samples for elements of the grid that are either disabled or not relevant, there are two functions `grid_dcopf_cleanup!()`  and `grid_acopf_cleanup!()` that take the PowerModel parsed grid as input and clean up these irrelevant elements.
 For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=0">. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=q_{min}=q_{max}=0">.
