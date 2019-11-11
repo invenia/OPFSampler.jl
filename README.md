@@ -9,7 +9,7 @@
 # Goal
 The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behaviour of the OPF input parameters.
 
-We have made a publicly-available database of input samples for different grids for both DC and AC-OPF that have feasible OPF solution, which can be found in [here](). Further information about the samples and the related function can be found in the rest of this document.  
+We have made a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution, which can be found in [here](). Further information about the samples and the related function can be found in the rest of this document.  
 
 ## Citing OPFSampler
 If you find any of the data available in the sample generation database or functions provided in this repo useful in your work, we kindly request that you cite the following:
