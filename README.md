@@ -86,7 +86,8 @@ For sample i in the dictionary, depending on the type of sampler (AC/DC), all or
 * "br_r" : line resistance values corresponding to `base_model["branch"][branch key]["br_r"]`.
 * "OPF_output" : OPF solution for the corresponding sample in PowerModels format.
 
-For each input parameter type, the order of data array is based on the sorted dictionary of the original PowerModels data in the `base_model`. For example, the k-th element of the vector `samples[i]["rate_a"][k]` corresponds to the "rate_a" data of the branch identified by the k-th key in the sorted branch dictionary `sort(base_model["branch"])` or the k-th element of the vector `samples[i]["qmax"][k]` corresponds to the "qmax" data of the generator identified by the k-th key in the sorted generator dictionary `sort(base_model["gen"])`. 
+We do not keep keys in the output, but make the assumption that the Array order is the same as the lexicographical ordering in PowerModels, i.e. `sort(power_model["load"]))` for load. 
+For example, the k-th element of the vector `samples[i]["rate_a"][k]` corresponds to the "rate_a" data of the branch identified by the k-th key in the sorted branch dictionary `sort(base_model["branch"])` or the k-th element of the vector `samples[i]["qmax"][k]`
 ## Grid Clean-Up Functions
 In order to avoid creating samples for elements of the grid that are either disabled or not relevant, there are two functions `grid_dcopf_cleanup!()`  and `grid_acopf_cleanup!()` that take the PowerModel parsed grid as input and clean up these irrelevant elements.
 For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=0">. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=q_{min}=q_{max}=0">.
