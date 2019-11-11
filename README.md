@@ -77,6 +77,7 @@ For sample i in the dictionary, depending on the type of sampler (AC/DC), all or
 * "rate_a" : line thermal ratings
 * "br_x" : line reactance values
 * "br_r" : line resistance values.
+* "OPF_output" : OPF solution for the corresponding sample in PowerModels format.
 
 The key names are compatible with the keys of corresponding data in [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl).
 ## Grid Clean-Up Functions
@@ -112,6 +113,7 @@ Using the sampler code above, we have generated input samples for different grid
 
 You can access the samples in the following [link]().
 
+In the generated samples above, the OPF solution that is generated under "OPF_output" has been removed to keep the size of the data small. 
 ## How to Use Generated Samples?
 There are functions provided in the package to vary the parameters of the original grid by the values generated in the `samples`, and run OPF or perform other analysis.
 
