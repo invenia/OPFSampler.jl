@@ -66,8 +66,19 @@ samples = RunACSampler(num_of_samples, params_AC);
 The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
 
 #### Output Structure
-The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution. For each input parameter type, the order of array of data is based on the sorted dictionary of the original data in the `base_model`. For examples, `samples[i]["rate_a"]` is a vector containing the thermal rating branch values in sample i and the order is the same order of the keys in `sort(base_model["branch"])`. Or `samples[i]["qd"]` is a vector containing the load reactive power values in sample i and the order is the same order of the keys in `sort(base_model["load"])`.   
+The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution. For each input parameter type, the order of array of data is based on the sorted dictionary of the original data in the `base_model`. For examples, `samples[i]["rate_a"]` is a vector containing the thermal rating branch values in sample i and the order is the same order of the keys in `sort(base_model["branch"])`. Or `samples[i]["qd"]` is a vector containing the load reactive power values in sample i and the order is the same order of the keys in `sort(base_model["load"])`.
 
+For sample i in the dictionary, depending on the type of sampler (AC/DC), all or a subset of the following keys can be found:
+
+* "pd" : nodal load active power
+* "qd" : nodal load reactive power
+* "pmax" : maximum active power output of generators
+* "qmax" : maximum reactive power output of generators
+* "rate_a" : line thermal ratings
+* "br_x" : line reactance values
+* "br_r" : line resistance values.
+
+The key names are compatible with the keys of corresponding data in [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl).
 ## Grid Clean-Up Functions
 In order to avoid creating samples for elements of the grid that are either disabled or not relevant, there are two functions `grid_dcopf_cleanup!()`  and `grid_acopf_cleanup!()` that take the PowerModel parsed grid as input and clean up these irrelevant elements.
 For DC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=0">. For AC-OPF, the function removes all the disabled branches and generators that are either disabled or have <img src="https://render.githubusercontent.com/render/math?math=p_{min}=p_{max}=q_{min}=q_{max}=0">.
