@@ -11,6 +11,20 @@ The goal of the package is to provide functions that take a power grid as input,
 
 We have made a publicly-available database of input samples for different grids for both DC and AC-OPF that have feasible OPF solution, which can be found in [here](). Further information about the samples and the related function can be found in the rest of this document.  
 
+## Citing OPFSampler
+If you find any of the data available in the sample generation database or functions provided in this repo useful in your work, we kindly request that you cite the following:
+```
+@article{opfsampler,
+  title={Learning an Optimally Reduced Formulation of OPF through Meta-optimization},
+  author={Robson, Alex and Jamei, Mahdi and Ududec, Cozmin and Mones, Letif},
+  journal={},
+  volume={},
+  number={},
+  pages={},
+  year={},
+  publisher={}
+}
+```
 ## Sampler
 `RunDCSampler()` and `RunACSampler()` are the two main functions that generate DC- and AC-OPF samples, respectively.
 The sampler functions provide the functionality to vary the grid parameters by rescaling them using factors drawn from a uniform distribution of the form <img src="https://render.githubusercontent.com/render/math?math=\mathcal{U}(1-\delta, 1%2B\delta)">. The following parameters can be rescaled for DC-OPF:
