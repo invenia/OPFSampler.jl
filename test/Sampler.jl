@@ -9,21 +9,21 @@
             @test isa(model, Dict)
             @test length(samples) == 4
             id1 = 1; id2 = 3;  # picking two of the 4 samples for some tests
-            key_list = ["pg_max", "sample_id", "rate_a", "br_x", "price_insensitive_load"]
+            key_list = ["pmax", "rate_a", "br_x", "pd"]
             #chekcing if it samples have all the expected keys
             @test all([in(kk, key_list) for kk in collect(keys(samples[id2]))])
             @test length(key_list) == length(collect(keys(samples[id2])))
             # checking if samples are different from each other
-            @test all(samples[id1]["pg_max"] .!= samples[id2]["pg_max"])
+            @test all(samples[id1]["pmax"] .!= samples[id2]["pmax"])
             @test all(samples[id1]["rate_a"] .!= samples[id2]["rate_a"])
             @test all(samples[id1]["br_x"] .!= samples[id2]["br_x"])
-            @test all(samples[id1]["price_insensitive_load"] .!=
-            samples[id2]["price_insensitive_load"])
+            @test all(samples[id1]["pd"] .!=
+            samples[id2]["pd"])
             @testset "dictionary order tests" begin
                 base_pd = [base_model["load"][k]["pd"] for k in keys(sort(base_model["load"]))]
-                @test all((1-par["dev_load_pd"]) .* base_pd .<= samples[1]["price_insensitive_load"] .<= (1+par["dev_load_pd"]) .* base_pd)
+                @test all((1-par["dev_load_pd"]) .* base_pd .<= samples[1]["pd"] .<= (1+par["dev_load_pd"]) .* base_pd)
                 base_pgmax = [base_model["gen"][k]["pmax"] for k in keys(sort(base_model["gen"]))]
-                @test all((1-par["dev_gen_max"]) .* base_pgmax .<= samples[1]["pg_max"] .<= (1+par["dev_gen_max"]) .* base_pgmax)
+                @test all((1-par["dev_gen_max"]) .* base_pgmax .<= samples[1]["pmax"] .<= (1+par["dev_gen_max"]) .* base_pgmax)
                 base_rate_a = [base_model["branch"][k]["rate_a"] for k in keys(sort(base_model["branch"]))]
                 @test all((1-par["dev_rate_a"]) .* base_rate_a .<= samples[1]["rate_a"] .<= (1+par["dev_rate_a"]) .* base_rate_a)
                 base_br_x = [base_model["branch"][k]["br_x"] for k in keys(sort(base_model["branch"]))]
@@ -39,30 +39,30 @@
             @test isa(model, Dict)
             @test length(samples) == 4
             id1 = 1; id2 = 3;  # picking two of the 4 samples for some tests
-            key_list = ["pg_max", "qg_max", "sample_id", "rate_a", "br_x", "br_r",
-             "price_insensitive_pload", "price_insensitive_qload"]
+            key_list = ["pmax", "qmax", "rate_a", "br_x", "br_r",
+             "qd", "pd"]
             #chekcing if it samples have all the expected keys
             @test all([in(kk, key_list) for kk in collect(keys(samples[id2]))])
             @test length(key_list) == length(collect(keys(samples[id2])))
             # checking if samples are different from each other
-            @test all(samples[id1]["pg_max"] .!= samples[id2]["pg_max"])
-            @test all(samples[id1]["qg_max"] .!= samples[id2]["qg_max"])
+            @test all(samples[id1]["pmax"] .!= samples[id2]["pmax"])
+            @test all(samples[id1]["qmax"] .!= samples[id2]["qmax"])
             @test all(samples[id1]["rate_a"] .!= samples[id2]["rate_a"])
             @test all(samples[id1]["br_x"] .!= samples[id2]["br_x"])
             @test sum(samples[id1]["br_r"] .!= samples[id2]["br_r"]) > 0
-            @test all(samples[id1]["price_insensitive_pload"] .!=
-            samples[id2]["price_insensitive_pload"])
-            @test all(samples[id1]["price_insensitive_qload"] .!=
-            samples[id2]["price_insensitive_qload"])
+            @test all(samples[id1]["pd"] .!=
+            samples[id2]["pd"])
+            @test all(samples[id1]["qd"] .!=
+            samples[id2]["qd"])
             @testset "dictionary order tests" begin
                 base_pd = [base_model["load"][k]["pd"] for k in keys(sort(base_model["load"]))]
-                @test all((1-par["dev_load_pd"]) .* base_pd .<= samples[1]["price_insensitive_pload"] .<= (1+par["dev_load_pd"]) .* base_pd)
+                @test all((1-par["dev_load_pd"]) .* base_pd .<= samples[1]["pd"] .<= (1+par["dev_load_pd"]) .* base_pd)
                 base_qd = [base_model["load"][k]["qd"] for k in keys(sort(base_model["load"]))]
-                @test all((1-par["dev_load_qd"]) .* base_qd .<= samples[1]["price_insensitive_qload"] .<= (1+par["dev_load_qd"]) .* base_qd)
+                @test all((1-par["dev_load_qd"]) .* base_qd .<= samples[1]["qd"] .<= (1+par["dev_load_qd"]) .* base_qd)
                 base_pgmax = [base_model["gen"][k]["pmax"] for k in keys(sort(base_model["gen"]))]
-                @test all((1-par["dev_pgen_max"]) .* base_pgmax .<= samples[1]["pg_max"] .<= (1+par["dev_pgen_max"]) .* base_pgmax)
+                @test all((1-par["dev_pgen_max"]) .* base_pgmax .<= samples[1]["pmax"] .<= (1+par["dev_pgen_max"]) .* base_pgmax)
                 base_qgmax = [base_model["gen"][k]["qmax"] for k in keys(sort(base_model["gen"]))]
-                @test all((1-par["dev_qgen_max"]) .* base_qgmax .<= samples[1]["qg_max"] .<= (1+par["dev_qgen_max"]) .* base_qgmax)
+                @test all((1-par["dev_qgen_max"]) .* base_qgmax .<= samples[1]["qmax"] .<= (1+par["dev_qgen_max"]) .* base_qgmax)
                 base_rate_a = [base_model["branch"][k]["rate_a"] for k in keys(sort(base_model["branch"]))]
                 @test all((1-par["dev_rate_a"]) .* base_rate_a .<= samples[1]["rate_a"] .<= (1+par["dev_rate_a"]) .* base_rate_a)
                 base_br_x = [base_model["branch"][k]["br_x"] for k in keys(sort(base_model["branch"]))]

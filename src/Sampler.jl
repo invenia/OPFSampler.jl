@@ -87,9 +87,8 @@ function DC_OPF_sampling(
         new_br_x = dev_reactance .* base_br_x
         # Here we reorganize the inputs that have been computed.
         single_sample = Dict(
-            "sample_id" => i_sample,
-            "price_insensitive_load" => new_load,
-            "pg_max" => new_gen_max,
+            "pd" => new_load,
+            "pmax" => new_gen_max,
             "rate_a" => new_rate_a,
             "br_x" => new_br_x,
         )
@@ -135,8 +134,8 @@ function RunDCSampler(
         samples, model = DC_OPF_sampling(n_samples_new, params; rng = rng)
         mycase = deepcopy(model)
         for sm in 1:length(samples)
-            set_load_pd!(mycase, samples[sm]["price_insensitive_load"])
-            set_gen_pmax!(mycase, samples[sm]["pg_max"])
+            set_load_pd!(mycase, samples[sm]["pd"])
+            set_gen_pmax!(mycase, samples[sm]["pmax"])
             set_dc_branch_param!(mycase, br_x = samples[sm]["br_x"],
             rate_a = samples[sm]["rate_a"])
             setting = Dict("output" => Dict("branch_flows" => true))
@@ -284,11 +283,10 @@ function AC_OPF_sampling(
         new_br_r = dev_resistance .* base_br_r
         # Here we reorganize the inputs that have been computed.
         single_sample = Dict(
-            "sample_id" => i_sample,
-            "price_insensitive_pload" => new_pload,
-            "price_insensitive_qload" => new_qload,
-            "pg_max" => new_pgen_max,
-            "qg_max" => new_qgen_max,
+            "pd" => new_pload,
+            "qd" => new_qload,
+            "pmax" => new_pgen_max,
+            "qmax" => new_qgen_max,
             "rate_a" => new_rate_a,
             "br_x" => new_br_x,
             "br_r" => new_br_r,
@@ -332,10 +330,10 @@ function RunACSampler(
         samples, model = AC_OPF_sampling(n_samples_new, params; rng = rng)
         mycase = deepcopy(model)
         for sm in 1:length(samples)
-            set_load_pd!(mycase, samples[sm]["price_insensitive_pload"])
-            set_load_qd!(mycase, samples[sm]["price_insensitive_qload"])
-            set_gen_pmax!(mycase, samples[sm]["pg_max"])
-            set_gen_qmax!(mycase, samples[sm]["qg_max"])
+            set_load_pd!(mycase, samples[sm]["pd"])
+            set_load_qd!(mycase, samples[sm]["qd"])
+            set_gen_pmax!(mycase, samples[sm]["pmax"])
+            set_gen_qmax!(mycase, samples[sm]["qmax"])
             set_ac_branch_param!(mycase, br_x = samples[sm]["br_x"],
             br_r = samples[sm]["br_r"], rate_a = samples[sm]["rate_a"])
             setting = Dict("output" => Dict("branch_flows" => true))
