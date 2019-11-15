@@ -144,7 +144,7 @@ In the generated samples above, the OPF solution that is generated under "OPF_ou
 ## How to Download Generated Samples?
 The generated samples are hosted in Amazon S3 bucket (s3://invenia-public-datasets/OPFSamples/pglib-opf/). The following folders are available in this directory:
 * `input_10k_DC_0.15pd_0.1rest`: This folder contains 10k DC-OPF samples for the grids given in the above table. As indicated by the folder name, "dev_load_pd" is chosen to be 0.15 while other deviation parameters in `params_DC` are set to 0.1.
-* `input_1k_AC_0.15pd_0.1rest`: This folder contains 1k AC-OPF samples for the grids given in the above table. As indicated by the folder name, "dev_load_pd" is chosen to be 0.15 while other deviation parameters in `params_AC` are set to 0.1.
+* `input_1k_AC_0.15pd_0.1rest`: This folder contains 1k AC-OPF samples for the grids given in the table above. As indicated by the folder name, "dev_load_pd" is chosen to be 0.15 while other deviation parameters in `params_AC` are set to 0.1.
 
 Assuming that you have AWS Command Line Interface (CLI) configured on your machine (see [here](https://docs.aws.amazon.com/cli/index.html) for more information), here is an example on how to download 10k DC input grid data for case `39-epri`:
 ```
