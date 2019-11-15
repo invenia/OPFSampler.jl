@@ -9,7 +9,7 @@
 # Goal
 The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behaviour of the OPF input parameters.
 
-We have made a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution, which can be found in the following Amazon S3 bucket (s3://invenia-public-datasets/OPFSamples/pglib-opf/). There are currently two folders in there corresponding to 10k DC-OPF samples and 1k AC-OPF samples for different grids.  
+We created a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution. The samples are collected in the following Amazon S3 bucket: `s3://invenia-public-datasets/OPFSamples/pglib-opf/`. There are currently two folders in the main directory corresponding to 10k DC-OPF and 1k AC-OPF samples for different grids.  
 
 Further information about how to generate/download/use the samples and the related functions can be found in the rest of this document.  
 
