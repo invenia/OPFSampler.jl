@@ -9,7 +9,9 @@
 # Goal
 The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behaviour of the OPF input parameters.
 
-We have made a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution, which can be found in [here](). Further information about the samples and the related function can be found in the rest of this document.  
+We have made a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution, which can be found in the following Amazon S3 bucket (s3://invenia-public-datasets/OPFSamples/pglib-opf/). There are currently two folders in there corresponding to 10k DC-OPF samples and 1k AC-OPF samples for different grids.  
+
+Further information about how to generate/download/use the samples and the related functions can be found in the rest of this document.  
 
 ## Citing OPFSampler
 If you find any of the data available in the sample generation database or functions provided in this repo useful in your work, we kindly request that you cite the following:
@@ -138,10 +140,16 @@ Using the sampler code above, we have generated input samples for different grid
 | 4661-sdet    |       10k      |        -       |
 | 9241-pegase  |       10k      |        -       |
 
-
-You can access the samples in the following [link]().
-
 In the generated samples above, the OPF solution that is generated under "OPF_output" has been removed to keep the size of the data small.
+## How to Download Generated Samples?
+The generated samples are hosted in Amazon S3 bucket (s3://invenia-public-datasets/OPFSamples/pglib-opf/). The following folders are available in this directory:
+* `input_10k_DC_0.15pd_0.1rest`: This folder contains 10k DC-OPF samples for the grids given in the above table. As indicated by the folder name, "dev_load_pd" is chosen to be 0.15 while other deviation parameters in `params_DC` are set to 0.1.
+* `input_1k_AC_0.15pd_0.1rest`: This folder contains 1k AC-OPF samples for the grids given in the above table. As indicated by the folder name, "dev_load_pd" is chosen to be 0.15 while other deviation parameters in `params_AC` are set to 0.1.
+
+Assuming that you have AWS Command Line Interface (CLI) configured on your machine (see [here](https://docs.aws.amazon.com/cli/index.html) for more information), here is an example on how to download 10k DC input grid data for case `39-epri`:
+```
+aws s3 cp s3://invenia-public-datasets/OPFSamples/pglib-opf/input_10k_DC_0.15pd_0.1rest/pglib_opf_case39_epri_input.jld2 /destination_directory
+```
 ## How to Use Generated Samples?
 There are functions provided in the package to vary the parameters of the original grid by the values generated in the `samples`, and run OPF or perform other analysis.
 
