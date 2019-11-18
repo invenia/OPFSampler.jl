@@ -16,15 +16,13 @@ Further information about how to generate/download/use the samples and the relat
 ## Citing OPFSampler
 If you find any of the data available in the sample generation database or functions provided in this repo useful in your work, we kindly request that you cite the following:
 ```
-@article{opfsampler,
+@misc{opfmeta,
   title={Learning an Optimally Reduced Formulation of OPF through Meta-optimization},
-  author={Robson, Alex and Jamei, Mahdi and Ududec, Cozmin and Mones, Letif},
-  journal={},
-  volume={},
-  number={},
-  pages={},
-  year={},
-  publisher={}
+  author={Alex Robson and Mahdi Jamei and Cozmin Ududec and Letif Mones},
+  year={2019},
+  eprint={1911.06784},
+  archivePrefix={arXiv},
+  primaryClass={eess.SP}
 }
 ```
 ## Sampler
