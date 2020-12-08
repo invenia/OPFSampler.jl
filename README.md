@@ -2,16 +2,15 @@
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://invenia.github.io/OPFSampler.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://invenia.github.io/OPFSampler.jl/dev)
-[![Build Status](https://travis-ci.com/invenia/OPFSampler.jl.svg?branch=master)](https://travis-ci.com/invenia/OPFSampler.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/invenia/OPFSampler.jl?svg=true)](https://ci.appveyor.com/project/invenia/OPFSampler-jl)
+[![CI](https://github.com/Invenia/OPFSampler.jl/workflows/CI/badge.svg)](https://github.com/Invenia/OPFSampler.jl/actions?query=workflow%3ACI)
 [![Codecov](https://codecov.io/gh/invenia/OPFSampler.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/invenia/OPFSampler.jl)
 
 # Goal
 The goal of the package is to provide functions that take a power grid as input, vary its parameters and generate feasible DC- and AC-OPF samples along with the corresponding solutions. This helps the user to explore a variety of distinct active sets of constraints of synthetic cases and mimic the time-varying behaviour of the OPF input parameters.
 
-We created a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution. The samples are collected in the following Amazon S3 bucket: `s3://invenia-public-datasets/OPFSamples/pglib-opf/`. There are currently two folders in the main directory corresponding to 10k DC-OPF and 1k AC-OPF samples for different grids.  
+We created a publicly-available database of input samples for different grids for both DC- and AC-OPF that have feasible OPF solution. The samples are collected in the following Amazon S3 bucket: `s3://invenia-public-datasets/OPFSamples/pglib-opf/`. There are currently two folders in the main directory corresponding to 10k DC-OPF and 1k AC-OPF samples for different grids.
 
-Further information about how to generate/download/use the samples and the related functions can be found in the rest of this document.  
+Further information about how to generate/download/use the samples and the related functions can be found in the rest of this document.
 
 ## Citing OPFSampler
 If you find any of the data available in the sample generation database or functions provided in this repo useful in your work, we kindly request that you cite the following:
@@ -65,7 +64,7 @@ for which the samples are to be generated along with the selected <img src="http
 params_DC = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
               "dev_gen_max" => 0.1, "dev_rate_a" => 0.1, "dev_br_x" => 0.1);
 
-# AC Parameters              
+# AC Parameters
 params_AC = Dict("case_network" => base_model, "dev_load_pd" => 0.1,
                "dev_load_qd" => 0.1, "dev_pgen_max" => 0.1, "dev_qgen_max" => 0.1,
                "dev_rate_a" => 0.1, "dev_br_x" => 0.1, "dev_br_r" => 0.1);
@@ -83,7 +82,7 @@ samples = RunDCSampler(num_of_samples, params_DC; rng = range);
 # AC-OPF
 samples = RunACSampler(num_of_samples, params_AC; rng = range);
 ```
-The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.    
+The sampling function starts by generating the number of required samples and then runs OPF for each of the samples and filter those with feasible OPF solutions. Importing power grid data, grid modifications and solving OPF are all done within [PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) framework. Since some of the generated samples might not be feasible, the sample generation continues in an iterative manner until the required number of samples with feasible solution is met. Currently, if more than 60\% of the samples lead to infeasible OPF in the first iteration, the algorithm returns an error to indicate the fact that the choice of parameters might not be suitable for the used grid.
 
 #### Output Structure
 The output data `samples` is an array of dictionaries where each element of array has the corresponding sample parameter values and the OPF solution.
